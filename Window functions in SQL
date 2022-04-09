@@ -1,0 +1,121 @@
+--Window functions tutorial--
+
+#1
+--Viewing the data
+SELECT * 
+FROM employee;
+
+#2
+--Viewing different department names
+SELECT DISTINCT(dept_name)
+FROM employee;
+
+#3
+--OVER() window function
+
+--It is replacement of group by clause. The OVER clause is used to apply aggregation 
+--on every row.
+--Let's see the example
+
+SELECT dept_name,
+	SUM(salary) OVER()
+FROM employee;  --showing sum of salary for all departments
+
+#4
+--Partition by clause
+--Divides result set from the query into data subsets.
+
+SELECT dept_name,
+	SUM(salary) OVER(PARTITION BY dept_name)
+FROM employee;
+
+#5
+--Rank() function
+--assigns unique rank to every row within a partition of a result set.
+
+SELECT first_name, dept_name,salary,
+RANK() OVER(ORDER BY salary asc) 
+FROM employee;
+
+--USING PARTITION BY clause with RANK() function
+
+SELECT first_name, dept_name,salary,
+RANK() OVER(PARTITION BY dept_name ORDER BY salary asc) 
+FROM employee;
+
+#6
+--DENSE RANK() function
+--it does not skip any ranks when ranking rows
+--Rank the current row within its partition without gaps.
+
+SELECT first_name, dept_name,salary,
+RANK() OVER(PARTITION BY dept_name ORDER BY salary asc), 
+DENSE_RANK() OVER(PARTITION BY DEPT_NAME ORDER BY salary asc) 
+FROM employee;
+
+#7
+--ROW_NUMBER() function
+--gives unique sequence row number for each row in the specified data.
+
+SELECT first_name, dept_name,salary,
+ROW_NUMBER() OVER(ORDER BY salary asc) 
+FROM employee;
+
+#8
+--NTILE
+--The SQL NTILE() function allows you to divide ordered rows in the partition into
+--a specified number of ranked groups as equal size as possible. These ranked groups are 
+--called buckets.
+
+The NTILE() function assigns each group a bucket number starting from 1. For each row in a group, the NTILE() function assigns a bucket number representing the group to which the row belongs.
+SELECT first_name, dept_name,salary,
+NTILE(10) OVER(ORDER BY salary asc) 
+FROM employee;
+
+#9
+--LAG() function
+--SQL LAG() function provides access to a row that comes before the current row 
+--at a specified physical offset. In other words, from the current row the LAG() 
+--function can access data of the previous row, or the row before the previous row, and so on.
+
+SELECT first_name, dept_name,salary,
+LAG(SALARY) OVER(ORDER BY salary asc) 
+FROM employee;
+
+#10
+--LEAD() function
+--SQL LEAD() function provide access to a row that follows the current row at a
+--specified physical offset. It means that from the current row, the LEAD() function
+--can access data of the next row, the row after the next row, and so on.
+
+The LEAD() function is very useful for comparing the value of the current row with the value of the row that following the current row.
+SELECT first_name, dept_name,salary,
+LEAD(SALARY) OVER(ORDER BY salary asc) 
+FROM employee;
+
+#11
+--FIRST_VALUE
+--The FIRST_VALUE() function returns a value evaluated against the first row in a
+--sorted partition of a result set.
+
+SELECT first_name, dept_name,salary,
+FIRST_VALUE(SALARY) OVER(ORDER BY salary asc) 
+FROM employee;
+
+#12
+--LAST_VALUE()
+--The LAST_VALUE() function returns the last value in an ordered partition of a result set.
+
+SELECT first_name, dept_name,salary,
+LAST_VALUE(SALARY) OVER(ORDER BY salary asc) 
+FROM employee;
+
+--Keep learning. Best of luck.
+
+
+
+
+
+
+
+
